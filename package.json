@@ -1,0 +1,8 @@
+{
+  "name": "vectordb-mern-rewrite",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ]
+}
