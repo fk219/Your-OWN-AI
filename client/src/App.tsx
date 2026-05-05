@@ -19,12 +19,14 @@ import { DocumentsTab } from "./components/docs/DocumentsTab";
 import { SearchTab } from "./components/search/SearchTab";
 import { ScatterCanvas } from "./components/visual/ScatterCanvas";
 import { textToEmbedding } from "./lib/textToEmbedding";
+import { useTheme } from "./hooks/useTheme";
 
 const EMPTY_EMB = new Array(16).fill(0.08);
 
 export default function App() {
   const apiBase = (import.meta as any).env?.VITE_API_BASE ?? "http://localhost:8080";
   const api = useMemo(() => createApi(apiBase), [apiBase]);
+  const { theme, toggleTheme } = useTheme("light");
 
   const [items, setItems] = useState<DemoItem[]>([]);
   const [status, setStatus] = useState<StatusResponse | null>(null);
@@ -213,7 +215,7 @@ export default function App() {
 
   return (
     <AppLayout
-      top={<TopBar status={status} statsLabel={statsLabel} />}
+      top={<TopBar status={status} statsLabel={statsLabel} theme={theme} onToggleTheme={toggleTheme} />}
       left={
         <>
           <div className="cardHeader">

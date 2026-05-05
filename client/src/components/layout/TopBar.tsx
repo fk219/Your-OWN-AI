@@ -1,6 +1,11 @@
 import type { StatusResponse } from "../../api/types";
 
-export function TopBar(props: { status: StatusResponse | null; statsLabel: string }) {
+export function TopBar(props: {
+  status: StatusResponse | null;
+  statsLabel: string;
+  theme: "dark" | "light";
+  onToggleTheme: () => void;
+}) {
   const ollama = props.status?.ollamaAvailable ? "Online" : "Offline";
   const badge = props.status?.ollamaAvailable ? "ok" : "err";
   return (
@@ -16,9 +21,11 @@ export function TopBar(props: { status: StatusResponse | null; statsLabel: strin
         <span className={`badge ${badge}`}>OLLAMA: {ollama}</span>
       </div>
       <div className="topbarRight">
+        <button className="themeBtn" onClick={props.onToggleTheme} type="button">
+          {props.theme === "dark" ? "DARK" : "LIGHT"}
+        </button>
         <div className="topbarStats">{props.statsLabel}</div>
       </div>
     </header>
   );
 }
-

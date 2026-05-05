@@ -11,6 +11,25 @@
   --muted:  #4a4a6a;
   --red:    #f38ba8;
   --green:  #a6e3a1;
+  --plot-bg: #07070f;
+  --plot-grid: #0e0e1e;
+  --plot-axis: #1a1a38;
+  --plot-title: #151530;
+  --plot-query: #ffffff;
+}
+
+html[data-theme="light"] {
+  --bg:     #f6f7fb;
+  --card:   #ffffff;
+  --border: #e6e7f2;
+  --accent: #4f46e5;
+  --text:   #14152b;
+  --muted:  #59607b;
+  --plot-bg: #f4f6ff;
+  --plot-grid: #d8dcef;
+  --plot-axis: #5b607d;
+  --plot-title: #2a2f49;
+  --plot-query: #111827;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -47,8 +66,19 @@ body {
 }
 .topbarSub { font-size: 11px; color: var(--muted); letter-spacing: 0.2px; }
 .topbarCenter { display: flex; align-items: center; gap: 8px; justify-content: center; flex-wrap: wrap; }
-.topbarRight { display: flex; justify-content: flex-end; }
+.topbarRight { display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
 .topbarStats { font-size: 11px; color: var(--muted); }
+.themeBtn {
+  width: auto;
+  padding: 7px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(108,99,255,.10);
+  color: var(--accent);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.themeBtn:hover { background: rgba(108,99,255,.16); }
 .cardHeader { display: flex; align-items: baseline; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border); }
 .cardTitle { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
 .badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; letter-spacing: 1px; border: 1px solid var(--border); color: var(--muted); }

@@ -23,8 +23,10 @@ export function VectorBars(props: { embedding: number[] }) {
     if (!ctx) return;
 
     const emb = props.embedding;
+    const css = getComputedStyle(document.documentElement);
+    const bg = css.getPropertyValue("--plot-bg").trim() || "#07070f";
     ctx.clearRect(0, 0, W, 76);
-    ctx.fillStyle = "#07070f";
+    ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, 76);
 
     const dims = 16;
@@ -56,4 +58,3 @@ export function VectorBars(props: { embedding: number[] }) {
 
   return <canvas ref={ref} style={{ display: "block", width: "100%", background: "var(--bg)", borderRadius: 5 }} />;
 }
-

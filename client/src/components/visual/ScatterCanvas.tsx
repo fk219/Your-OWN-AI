@@ -17,6 +17,12 @@ type Point = { x: number; y: number; item: DemoItem };
 type ScatterQueryPoint = { x: number; y: number } | null;
 
 export function ScatterCanvas(props: { items: DemoItem[]; hitIds: Set<number>; activeIds: number[] }) {
+  const css = typeof window !== "undefined" ? getComputedStyle(document.documentElement) : (null as any);
+  const plotBg = css ? css.getPropertyValue("--plot-bg").trim() || "#07070f" : "#07070f";
+  const plotGrid = css ? css.getPropertyValue("--plot-grid").trim() || "#0e0e1e" : "#0e0e1e";
+  const plotAxis = css ? css.getPropertyValue("--plot-axis").trim() || "#1a1a38" : "#1a1a38";
+  const plotTitle = css ? css.getPropertyValue("--plot-title").trim() || "#151530" : "#151530";
+  const plotQuery = css ? css.getPropertyValue("--plot-query").trim() || "#ffffff" : "#ffffff";
   const [tip, setTip] = useState<{ visible: boolean; x: number; y: number; html: string }>({
     visible: false,
     x: 0,
@@ -85,33 +91,33 @@ export function ScatterCanvas(props: { items: DemoItem[]; hitIds: Set<number>; a
         style={{ display: "block" }}
         onMouseLeave={() => setTip((t) => (t.visible ? { ...t, visible: false } : t))}
       >
-        <rect x={0} y={0} width={W} height={H} fill="#07070f" />
+        <rect x={0} y={0} width={W} height={H} fill={plotBg} />
 
         {Array.from({ length: 9 }).map((_, i) => {
           const tx = P + (i / 8) * (W - 2 * P);
           const ty = P + (i / 8) * (H - 2 * P);
           return (
             <g key={i}>
-              <line x1={tx} y1={P} x2={tx} y2={H - P} stroke="#0e0e1e" strokeWidth={1} />
-              <line x1={P} y1={ty} x2={W - P} y2={ty} stroke="#0e0e1e" strokeWidth={1} />
+              <line x1={tx} y1={P} x2={tx} y2={H - P} stroke={plotGrid} strokeWidth={1} />
+              <line x1={P} y1={ty} x2={W - P} y2={ty} stroke={plotGrid} strokeWidth={1} />
             </g>
           );
         })}
 
-        <text x={W / 2 - 40} y={H - 18} fill="#1a1a38" fontSize={11} fontFamily="Fira Code, monospace">
+        <text x={W / 2 - 40} y={H - 18} fill={plotAxis} fontSize={11} fontFamily="Fira Code, monospace">
           PC₁ →
         </text>
         <text
           x={18}
           y={H / 2 + 50}
-          fill="#1a1a38"
+          fill={plotAxis}
           fontSize={11}
           fontFamily="Fira Code, monospace"
           transform={`rotate(-90 18 ${H / 2 + 50})`}
         >
           PC₂ →
         </text>
-        <text x={80} y={28} fill="#151530" fontSize={12} fontFamily="Fira Code, monospace">
+        <text x={80} y={28} fill={plotTitle} fontSize={12} fontFamily="Fira Code, monospace">
           2D PCA Projection · Semantic Space
         </text>
 
@@ -168,8 +174,8 @@ export function ScatterCanvas(props: { items: DemoItem[]; hitIds: Set<number>; a
               const d = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p[0]} ${p[1]}`).join(" ") + " Z";
               return (
                 <>
-                  <path d={d} fill="#fff" />
-                  <text x={qx + 16} y={qy + 4} fill="#aaaacc" fontSize={10} fontFamily="Fira Code, monospace">
+                  <path d={d} fill={plotQuery} />
+                  <text x={qx + 16} y={qy + 4} fill={plotAxis} fontSize={10} fontFamily="Fira Code, monospace">
                     query
                   </text>
                 </>
@@ -178,7 +184,7 @@ export function ScatterCanvas(props: { items: DemoItem[]; hitIds: Set<number>; a
           : null}
 
         {!points.length ? (
-          <text x={W / 2} y={H / 2} fill="#1a1a38" fontSize={13} textAnchor="middle" fontFamily="Fira Code, monospace">
+          <text x={W / 2} y={H / 2} fill={plotAxis} fontSize={13} textAnchor="middle" fontFamily="Fira Code, monospace">
             Connecting to VectorDB…
           </text>
         ) : null}
@@ -188,4 +194,3 @@ export function ScatterCanvas(props: { items: DemoItem[]; hitIds: Set<number>; a
     </>
   );
 }
-
