@@ -1,223 +1,172 @@
-# VectorDB — Build a Vector Database from Scratch in C++
+# VectorDB (MERN) — Vector Search + HNSW + RAG Demo
 
-A fully working **Vector Database** built from scratch in C++ with a web UI.  
-Implements **HNSW**, **KD-Tree**, and **Brute Force** search algorithms side-by-side, plus a **RAG pipeline** powered by a local LLM via Ollama.
+A recruiter-focused demo project that shows how a vector database works under the hood:
+- Implements **Brute Force**, **KD-Tree**, and **HNSW** nearest-neighbor search from scratch
+- Visualizes embeddings in a **2D PCA “semantic space”**
+- Adds a local **RAG** workflow using **Ollama** (optional)
 
-> Built as an educational project to show how production vector databases like Pinecone, Weaviate, and Chroma actually work under the hood.
+This repository contains a full working app:
+- **React (Vite + TypeScript)** frontend in [client/](file:///workspace/client)
+- **Node + Express (TypeScript)** backend in [server/](file:///workspace/server)
 
----
-
-## What This Project Does
-
-| Feature | Description |
-|---|---|
-| **3 Search Algorithms** | HNSW (production-grade), KD-Tree, Brute Force — run all three and compare speed |
-| **3 Distance Metrics** | Cosine similarity, Euclidean distance, Manhattan distance |
-| **16D Demo Vectors** | 20 pre-loaded semantic vectors across 4 categories (CS, Math, Food, Sports) |
-| **2D PCA Scatter Plot** | Live visualization of semantic space — watch clusters form |
-| **Real Document Embedding** | Paste any text → Ollama embeds it with `nomic-embed-text` (768D) |
-| **RAG Pipeline** | Ask questions about your documents → HNSW retrieves context → local LLM answers |
-| **Full REST API** | CRUD endpoints: insert, delete, search, benchmark, hnsw-info |
+> MongoDB is intentionally not included yet (data is in-memory). The goal is to demonstrate indexing + retrieval + UX, not persistence.
 
 ---
 
-## How It Works
+## What You Can Demo (Recruiter Checklist)
+
+- **Algorithm comparison:** HNSW vs KD-Tree vs Brute Force
+- **Distance metrics:** Cosine / Euclidean / Manhattan
+- **Latency instrumentation:** each search returns microsecond latency from the backend
+- **Visualization:** PCA scatter plot with hit highlighting
+- **RAG:** insert documents → ask questions → see retrieved context (requires Ollama)
+
+---
+
+## Architecture (High Level)
 
 ```
-Your Text
-    │
-    ▼
-Ollama (nomic-embed-text)          ← converts text to a 768-dimensional vector
-    │
-    ▼
-HNSW Index (C++)                   ← indexes the vector in a multilayer graph
-    │
-    ▼
-Semantic Search                    ← finds nearest neighbors in vector space
-    │
-    ▼
-Ollama (llama3.2)                  ← reads retrieved chunks, generates an answer
-    │
-    ▼
-Answer
+React UI (client)
+  ├─ Search / Benchmark / HNSW Info
+  ├─ Documents (chunk + embed via Ollama)
+  └─ Ask AI (RAG)
+        │
+        ▼
+Express API (server)
+  ├─ VectorDB (16D demo vectors)
+  │    ├─ BruteForce
+  │    ├─ KDTree
+  │    └─ HNSW
+  └─ DocumentDB (real embeddings via Ollama)
+       └─ HNSW (cosine) over chunk embeddings
+        │
+        ▼
+Ollama (optional, local)
+  ├─ nomic-embed-text  (embeddings)
+  └─ llama3.2          (generation)
 ```
 
-**HNSW (Hierarchical Navigable Small World)** is the same algorithm used by Pinecone, Weaviate, Chroma, and Milvus. It builds a multilayer graph where each layer is progressively sparser — searches start at the top layer and zoom in, achieving O(log N) complexity instead of O(N) for brute force.
-
 ---
 
-## Prerequisites
+## Quick Start (Recommended)
 
-You need **3 things** installed on your Windows laptop:
-
-1. **MSYS2** (gives you g++ compiler)
-2. **Git**
-3. **Ollama** (runs the local AI models)
-
----
-
-## Step-by-Step Setup (Windows)
-
-### Step 1 — Install MSYS2 (C++ Compiler)
-
-1. Go to **https://www.msys2.org** and download the installer
-2. Run the installer, keep default path (`C:\msys64`)
-3. After install, open **MSYS2 UCRT64** from Start Menu (the orange icon)
-4. Run these commands inside the MSYS2 terminal:
+### 1) Install dependencies
 
 ```bash
-pacman -Syu
+cd /path/to/repo
+npm install
 ```
-*(Close and reopen the terminal if it asks you to)*
+
+### 2) Run backend (API)
 
 ```bash
-pacman -S mingw-w64-ucrt-x86_64-gcc
+cd server
+npm run dev
 ```
 
-5. Add g++ to your Windows PATH:
-   - Press `Win + R`, type `sysdm.cpl`, press Enter
-   - Click **Advanced** → **Environment Variables**
-   - Under **System variables**, find **Path**, click **Edit**
-   - Click **New** and add: `C:\msys64\ucrt64\bin`
-   - Click OK on all windows
-   - **Open a new PowerShell** and verify:
-   ```
-   g++ --version
-   ```
-   You should see something like `g++ (GCC) 15.x.x`
+Backend runs on:
+- http://localhost:8080
+
+### 3) Run frontend (UI)
+
+In a new terminal:
+
+```bash
+cd client
+npm run dev
+```
+
+Frontend runs on:
+- http://localhost:5174 (or the next free port)
 
 ---
 
-### Step 2 — Install Git
+## Enable RAG (Ollama)
 
-1. Go to **https://git-scm.com/download/win** and download Git for Windows
-2. Run the installer with default settings
-3. Verify in PowerShell:
-```
-git --version
-```
+RAG features require Ollama running locally on the same machine as the backend.
 
----
+### Install + run
 
-### Step 3 — Install Ollama (Local AI Models)
-
-1. Go to **https://ollama.com** and click **Download for Windows**
-2. Run the installer
-3. Ollama starts automatically in the system tray
-4. Open **PowerShell** and pull the two required models:
-
-```powershell
+```bash
+ollama serve
 ollama pull nomic-embed-text
-```
-*(~274 MB — this is the embedding model)*
-
-```powershell
 ollama pull llama3.2
 ```
-*(~2 GB — this is the language model)*
 
-5. Verify Ollama is running:
-```powershell
-ollama list
+### Verify
+
+```bash
+curl http://127.0.0.1:11434/api/tags
 ```
-You should see both models listed.
 
-> **Minimum specs for Ollama:** 8GB RAM recommended. The models will use ~3GB total.
+Then refresh the app. The top bar should show **OLLAMA: Online**.
 
 ---
 
-### Step 4 — Clone the Repository
+## API Endpoints (Backend)
 
-Open **PowerShell** and run:
+Base URL: `http://localhost:8080`
 
-```powershell
-git clone https://github.com/YOUR_USERNAME/VectorDB.git
-cd VectorDB
-```
+- `GET /stats` — supported algos/metrics + dims
+- `GET /items` — list demo vectors
+- `GET /search?v=<comma-separated-16d>&k=<int>&metric=<cosine|euclidean|manhattan>&algo=<hnsw|kdtree|bruteforce>`
+- `POST /insert` — `{ metadata, category, embedding }`
+- `DELETE /delete/:id`
+- `GET /benchmark?v=<...>&k=<int>&metric=<...>`
+- `GET /hnsw-info` — layer counts + edges + nodes
 
-*(Replace `YOUR_USERNAME` with the actual GitHub username)*
+Documents / RAG:
+- `POST /doc/insert` — `{ title, text }` (chunks + embeds via Ollama)
+- `GET /doc/list`
+- `DELETE /doc/delete/:id`
+- `POST /doc/search` — `{ question, k }`
+- `POST /doc/ask` — `{ question, k }`
 
----
-
-### Step 5 — Compile the C++ Server
-
-Inside the `VectorDB` folder, run:
-
-```powershell
-g++ -std=c++17 -O2 main.cpp -o db -lws2_32
-```
-
-This produces `db.exe`. It takes about 10–20 seconds.
-
-> **Troubleshooting:**
-> - `g++: command not found` → MSYS2 not in PATH, redo Step 1 point 5
-> - `undefined reference to WSA...` → missing `-lws2_32` flag, add it
-> - Takes too long? Remove `-O2` for faster (but slower executable) compile
+Health / status:
+- `GET /health`
+- `GET /status` — includes `ollamaAvailable`
 
 ---
 
-### Step 6 — Run Everything
+## What’s Implemented “From Scratch”
 
-**Terminal 1** — Start Ollama (if not already running):
-```powershell
-ollama serve
-```
-*(If Ollama is already in the system tray, skip this)*
+### HNSW
 
-**Terminal 2** — Start the VectorDB server:
-```powershell
-./db
-```
+HNSW (Hierarchical Navigable Small World) is the same family of ANN algorithm used in many production vector DBs.
+This project implements:
+- multi-layer graph construction
+- neighbor selection + pruning
+- approximate k-NN search using an ef parameter
 
-You should see:
-```
-=== VectorDB Engine ===
-http://localhost:8080
-20 demo vectors | 16 dims | HNSW+KD-Tree+BruteForce
-Ollama: ONLINE
-  embed model: nomic-embed-text  gen model: llama3.2
-```
+Implementation: [server/src/algos/hnsw.ts](file:///workspace/server/src/algos/hnsw.ts)
 
-**Open your browser** and go to:
+### KD-Tree + Brute Force
+
+Baselines for comparison:
+- Brute Force is the correctness reference
+- KD-Tree gives exact-ish performance intuition (especially in low dims)
+
+Implementations: [server/src/algos/](file:///workspace/server/src/algos)
+
+---
+
+## Repo Layout
+
 ```
-http://localhost:8080
+client/   React UI (Vite + TS)
+server/   Node/Express API (TS) + algos + in-memory DBs
+docs/     design + implementation plans
 ```
 
 ---
 
-## Using the Application
+## Notes for Recruiters
 
-### Tab 1: Search (Demo Vectors)
+If you only have 2–3 minutes:
+- Run 3 searches with different algos and show latency changing
+- Click benchmark to show the comparison bars
+- Insert a document (if Ollama is online) and ask a question to show RAG + retrieved context
 
-- Type any concept in the search box: `binary tree`, `sushi`, `basketball`, `calculus`
-- Choose your algorithm: **HNSW**, **KD-Tree**, or **Brute Force**
-- Choose distance metric: **Cosine**, **Euclidean**, or **Manhattan**
-- Click **⚡ SEARCH** — results appear with distances, the matching point glows on the scatter plot
-- Click **▶ COMPARE ALL ALGOS** to run all 3 algorithms and compare their speed
-
-**The scatter plot** shows all 20 vectors projected to 2D using PCA. Notice how the 4 semantic categories (CS, Math, Food, Sports) form distinct clusters — this is what "semantic similarity" looks like visually.
-
-### Tab 2: Documents (Real Embeddings)
-
-This uses Ollama to generate **real 768-dimensional embeddings** from any text.
-
-1. Type a title (e.g., `Operating Systems Notes`)
-2. Paste any text — lecture notes, textbook paragraphs, Wikipedia articles
-3. Click **⚡ EMBED & INSERT**
-4. Long documents are automatically split into overlapping 250-word chunks
-5. Each chunk gets its own embedding and is stored in a separate HNSW index
-
-### Tab 3: Ask AI (RAG Pipeline)
-
-1. Make sure you have inserted some documents in Tab 2 first
-2. Type a question about your documents
-3. Click **🤖 ASK AI**
-
-What happens behind the scenes:
-```
-1. Your question → embedded with nomic-embed-text (768D vector)
-2. HNSW search → finds 3 most semantically similar chunks
-3. Retrieved chunks → sent as context to llama3.2
 4. llama3.2 → generates an answer based only on your documents
 ```
 

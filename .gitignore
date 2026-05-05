@@ -8,6 +8,14 @@ a.out
 build/
 bin/
 
+# Node / JS
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.env
+.env.*
+
 # IDE files
 .vscode/
 .idea/
