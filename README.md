@@ -8,8 +8,8 @@ This is the MERN rebuild of the original C++ vector database. The C++ implementa
 
 | Surface | URL |
 |---|---|
-| React vector lab | _pending deployment_ |
-| Express API | _pending deployment_ |
+| React vector lab | https://vector-field-gamma.vercel.app |
+| Express API | https://vector-ai-api.onrender.com/api/health |
 
 ## What works
 
