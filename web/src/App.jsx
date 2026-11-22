@@ -43,8 +43,8 @@ function Shell({ children, data }) {
             {data.error ? 'API offline' : 'API live'}
           </span>
           <span className="topbar-meta">
-            <CircleDot size={10} /> {data.demo.stats?.demoVectors || 0} vectors
-            <Boxes size={10} /> {data.documents.length} docs
+            <CircleDot size={10} /> {data.loading ? '…' : data.demo.stats?.demoVectors || 0} vectors
+            <Boxes size={10} /> {data.loading ? '…' : data.documents.length} docs
           </span>
         </div>
       </header>

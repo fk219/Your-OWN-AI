@@ -31,8 +31,8 @@ export function Library({ data }) {
           </p>
         </div>
         <div className="page-head-meta">
-          <span className="big-number">{data.documents.length}</span>
-          <span>documents</span>
+          <span className="big-number">{data.loading ? '—' : data.documents.length}</span>
+          <span>{data.loading ? 'loading' : 'documents'}</span>
           <span className="mono tiny muted">256D · hash-256</span>
         </div>
       </header>
@@ -48,7 +48,12 @@ export function Library({ data }) {
           </div>
 
           <div className="document-list">
-            {data.documents.map((doc) => (
+            {data.loading ? (
+              <div className="empty-state">
+                <BookOpen size={22} />
+                <p>Waking the library and rebuilding the index…</p>
+              </div>
+            ) : data.documents.map((doc) => (
               <article key={doc.id} className="document-row">
                 <div className="document-head">
                   <div>
