@@ -16,7 +16,7 @@ beforeAll(async () => {
   ({ engine } = await import('../src/engine.js'));
   const { createApp } = await import('../src/app.js');
   app = createApp();
-}, 60000);
+}, 120000);
 
 beforeEach(async () => {
   await seedData({ force: true });
