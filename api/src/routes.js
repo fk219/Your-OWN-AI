@@ -1,12 +1,28 @@
 import { Router } from 'express';
+import mongoose from 'mongoose';
 import { engine } from './engine.js';
+import { openapi } from './openapi.js';
+import { expensiveLimiter, requireOperator, searchLimiter, writeLimiter } from './security.js';
+import { validate } from './validate.js';
+import { askSchema, benchmarkSchema, documentSchema, searchSchema } from './schemas.js';
 
 const wrap = (handler) => (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
 
 export const router = Router();
 
 router.get('/health', (_req, res) => {
-  res.json({ ok: true, service: 'vector-ai-api', time: new Date().toISOString() });
+  const databaseReady = mongoose.connection.readyState === 1;
+  res.status(databaseReady ? 200 : 503).json({
+    ok: databaseReady,
+    service: 'vector-ai-api',
+    database: databaseReady ? 'connected' : 'disconnected',
+    uptimeSeconds: Number(process.uptime().toFixed(1)),
+    time: new Date().toISOString()
+  });
+});
+
+router.get('/openapi.json', (_req, res) => {
+  res.json(openapi);
 });
 
 router.get('/stats', (_req, res) => {
@@ -19,15 +35,19 @@ router.get('/demo', (_req, res) => {
 
 router.post(
   '/search',
+  searchLimiter,
+  validate(searchSchema),
   wrap(async (req, res) => {
-    res.json(engine.searchDemo(req.body || {}));
+    res.json(engine.searchDemo(req.body));
   })
 );
 
 router.post(
   '/benchmark',
+  expensiveLimiter,
+  validate(benchmarkSchema),
   wrap(async (req, res) => {
-    res.json(engine.benchmark(req.body || {}));
+    res.json(engine.benchmark(req.body));
   })
 );
 
@@ -40,13 +60,18 @@ router.get(
 
 router.post(
   '/documents',
+  requireOperator,
+  writeLimiter,
+  validate(documentSchema),
   wrap(async (req, res) => {
-    res.status(201).json({ document: await engine.addDocument(req.body || {}) });
+    res.status(201).json({ document: await engine.addDocument(req.body) });
   })
 );
 
 router.delete(
   '/documents/:id',
+  requireOperator,
+  writeLimiter,
   wrap(async (req, res) => {
     const removed = await engine.deleteDocument(req.params.id);
     if (!removed) return res.status(404).json({ error: { message: 'Document not found' } });
@@ -56,8 +81,10 @@ router.delete(
 
 router.post(
   '/ask',
+  expensiveLimiter,
+  validate(askSchema),
   wrap(async (req, res) => {
-    const { question, k = 4 } = req.body || {};
+    const { question, k } = req.body;
     res.json(engine.ask(question, k));
   })
 );

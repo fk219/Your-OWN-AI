@@ -16,23 +16,24 @@ beforeAll(async () => {
   ({ engine } = await import('../src/engine.js'));
   const { createApp } = await import('../src/app.js');
   app = createApp();
-});
+}, 60000);
 
 beforeEach(async () => {
   await seedData({ force: true });
   await engine.rebuild();
-});
+}, 30000);
 
 afterAll(async () => {
   await db.disconnectDb();
   await mongod.stop();
-});
+}, 30000);
 
 describe('Vector AI API', () => {
-  it('serves health and stats', async () => {
+  it('serves health with MongoDB readiness and stats', async () => {
     const health = await request(app).get('/api/health');
     expect(health.status).toBe(200);
     expect(health.body.ok).toBe(true);
+    expect(health.body.database).toBe('connected');
 
     const stats = await request(app).get('/api/stats');
     expect(stats.body.demoVectors).toBe(20);
@@ -79,9 +80,26 @@ describe('Vector AI API', () => {
     expect(response.body.sources.length).toBeGreaterThan(0);
   });
 
-  it('adds and deletes a document, then rebuilds retrieval', async () => {
+  it('gates document changes and validates the payload', async () => {
+    const denied = await request(app)
+      .post('/api/documents')
+      .send({
+        title: 'Testing the vector index',
+        text: 'A deterministic test document about graphs, vectors, and retrieval quality.',
+        tags: ['test', 'vectors'],
+        category: 'Testing'
+      });
+    expect(denied.status).toBe(401);
+
+    const invalid = await request(app)
+      .post('/api/documents')
+      .set('x-demo-admin-token', 'demo-operator-key')
+      .send({ title: '', text: 'short' });
+    expect(invalid.status).toBe(400);
+
     const created = await request(app)
       .post('/api/documents')
+      .set('x-demo-admin-token', 'demo-operator-key')
       .send({
         title: 'Testing the vector index',
         text: 'A deterministic test document about graphs, vectors, and retrieval quality.',
@@ -94,7 +112,12 @@ describe('Vector AI API', () => {
     const docs = await request(app).get('/api/documents');
     expect(docs.body.items).toHaveLength(13);
 
-    const removed = await request(app).delete(`/api/documents/${created.body.document.id}`);
+    const deniedDelete = await request(app).delete(`/api/documents/${created.body.document.id}`);
+    expect(deniedDelete.status).toBe(401);
+
+    const removed = await request(app)
+      .delete(`/api/documents/${created.body.document.id}`)
+      .set('x-demo-admin-token', 'demo-operator-key');
     expect(removed.status).toBe(200);
     const after = await request(app).get('/api/documents');
     expect(after.body.items).toHaveLength(12);

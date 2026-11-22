@@ -47,15 +47,26 @@ engine/              Original C++ vector database and web UI
 
 | Method | Path | Purpose |
 |---|---|---|
-| `GET` | `/api/health` | Health check |
+| `GET` | `/api/health` | Health check with MongoDB readiness |
+| `GET` | `/api/openapi.json` | OpenAPI 3.1 contract |
 | `GET` | `/api/stats` | Index and embedding stats |
 | `GET` | `/api/demo` | 16D vectors + 2D projection |
 | `POST` | `/api/search` | Query HNSW, KD-tree, or brute force |
 | `POST` | `/api/benchmark` | Latency and recall comparison |
 | `GET` | `/api/documents` | Document library |
-| `POST` | `/api/documents` | Embed and index a passage |
-| `DELETE` | `/api/documents/:id` | Remove a passage |
+| `POST` | `/api/documents` | Embed and index a passage (operator token) |
+| `DELETE` | `/api/documents/:id` | Remove a passage (operator token) |
 | `POST` | `/api/ask` | Retrieve passages and build an extractive answer |
+
+## Operator gate and API contract
+
+Document mutations require the `x-demo-admin-token` header. The default demo value
+is `demo-operator-key`; set `ADMIN_TOKEN` on Render to override it. This is a demo
+gate, not production authentication. Search, benchmark, and ask are public and
+rate-limited.
+
+The OpenAPI contract is served at `/api/openapi.json`. Responses include an
+`x-request-id`, and the API emits one structured JSON log line per request.
 
 ## Run locally
 
@@ -76,13 +87,14 @@ npm run dev:web
 npm test
 ```
 
-Eleven tests cover hash embeddings, KD-tree and HNSW recall, PCA projection, the demo field, all three search algorithms, benchmarking, document add/delete, extractive answers, and invalid input.
+Eleven tests cover hash embeddings, KD-tree and HNSW recall, PCA projection, the demo field, all three search algorithms, benchmarking, MongoDB readiness, operator-token gating and payload validation, document add/delete, extractive answers, and invalid input.
 
 ## Deployment
 
 - **Frontend:** Vercel static build, proxying `/api` to the Render API.
-- **API:** Render web service from `api/`.
+- **API:** Render web service from `api/`; a production-style `Dockerfile` is included.
 - **Database:** MongoDB Atlas database `vectorai` on `Cluster0`.
+- **CI:** GitHub Actions runs API tests and the frontend build on every push.
 
 ## Honest limitations
 

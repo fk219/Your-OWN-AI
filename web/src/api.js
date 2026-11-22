@@ -1,8 +1,13 @@
 const base = import.meta.env.VITE_API_URL || '';
+const operatorToken = import.meta.env.VITE_DEMO_ADMIN_TOKEN || 'demo-operator-key';
 
 async function request(path, options = {}) {
   const response = await fetch(`${base}${path}`, {
-    headers: { 'content-type': 'application/json', ...(options.headers || {}) },
+    headers: {
+      'content-type': 'application/json',
+      'x-demo-admin-token': operatorToken,
+      ...(options.headers || {})
+    },
     ...options
   });
   const data = await response.json().catch(() => ({}));
