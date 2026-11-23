@@ -1,5 +1,5 @@
 import { NavLink, Route, Routes } from 'react-router-dom';
-import { Activity, Boxes, CircleDot } from 'lucide-react';
+import { Activity, Boxes, CircleDot, RefreshCw } from 'lucide-react';
 import { useVectorLab } from './useVectorLab.js';
 import { Lab } from './pages/Lab.jsx';
 import { Library } from './pages/Library.jsx';
@@ -34,7 +34,7 @@ function Shell({ children, data }) {
           <NavLink to="/" end>Lab</NavLink>
           <NavLink to="/library">Library</NavLink>
           <NavLink to="/ask">Ask</NavLink>
-          <NavLink to="/method">Method</NavLink>
+          <NavLink to="/method">Guide</NavLink>
         </nav>
 
         <div className="topbar-status">
@@ -50,7 +50,14 @@ function Shell({ children, data }) {
       </header>
 
       <main className="main">
-        {data.error && <div className="banner bad"><strong>API error.</strong> {data.error}</div>}
+        {data.error && (
+          <div className="banner bad">
+            <span><strong>API error.</strong> {data.error}</span>
+            <button type="button" className="btn secondary small" onClick={data.reload}>
+              <RefreshCw size={12} /> Retry
+            </button>
+          </div>
+        )}
         {data.notice && <div className="banner good">{data.notice}</div>}
         {children}
       </main>

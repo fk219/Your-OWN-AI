@@ -25,31 +25,31 @@ export function useVectorLab() {
     return demoResponse;
   }, []);
 
-  useEffect(() => {
-    let active = true;
-    load()
-      .then(async (demoResponse) => {
-        if (!active || !demoResponse.vectors[0]) return;
-        const first = demoResponse.vectors[0];
-        setSelectedId(first.id);
-        const search = await api.search({
-          vector: first.vector,
-          k: 5,
-          metric: 'cosine',
-          algorithm: 'hnsw'
-        });
-        if (active) setResults(search);
-      })
-      .catch((err) => {
-        if (active) setError(err.message);
-      })
-      .finally(() => {
-        if (active) setLoading(false);
+  const reload = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const demoResponse = await load();
+      if (!demoResponse.vectors[0]) return;
+      const first = demoResponse.vectors[0];
+      setSelectedId(first.id);
+      const search = await api.search({
+        vector: first.vector,
+        k: 5,
+        metric: 'cosine',
+        algorithm: 'hnsw'
       });
-    return () => {
-      active = false;
-    };
+      setResults(search);
+    } catch (err) {
+      setError(err.message || 'The API did not answer. It may be waking up.');
+    } finally {
+      setLoading(false);
+    }
   }, [load]);
+
+  useEffect(() => {
+    void reload();
+  }, [reload]);
 
   const withAction = async (name, task) => {
     setAction(name);
@@ -151,6 +151,7 @@ export function useVectorLab() {
     runBenchmark,
     addDocument,
     deleteDocument,
-    ask
+    ask,
+    reload
   };
 }

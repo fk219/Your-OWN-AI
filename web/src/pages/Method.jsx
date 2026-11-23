@@ -17,20 +17,58 @@ export function Method({ data }) {
     <div className="page">
       <header className="page-head">
         <div>
-          <p className="eyebrow">METHOD / THE INDEX, IN THE OPEN</p>
+          <p className="eyebrow">GUIDE / WHAT IT DOES + HOW TO USE IT</p>
           <h1>
-            Three ways
+            Search a field.
             <br />
-            <em>to find a neighbor.</em>
+            <em>Ask the library.</em>
           </h1>
           <p className="lede">
-            The live demo runs three search structures side by side: a layered graph, a spatial tree,
-            and an exhaustive scan. Brute force is the ground truth. Recall and latency come from the
-            same API call.
+            Vector Field is a live nearest-neighbor lab. It compares HNSW, KD-tree, and brute force on
+            the same vectors, then lets you ask questions against a MongoDB-backed passage library.
+            Every number you see comes from the running API.
           </p>
         </div>
         <Link to="/" className="back-link">Open the lab <ArrowRight size={13} /></Link>
       </header>
+
+      <section className="quick-guide">
+        <div className="quick-guide-head">
+          <p className="eyebrow">START HERE / FOUR MOVES</p>
+          <h2>How to use Vector Field.</h2>
+          <p>
+            Start with the demo field. No key, no model download, no setup. The embedding is a local
+            lexical hash, and the index is rebuilt from MongoDB on every add or delete.
+          </p>
+        </div>
+        <div className="quick-guide-grid">
+          <article>
+            <span>01</span>
+            <h3>Pick a point</h3>
+            <p>Click any point in the field or choose a vector from the query list.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Choose the rules</h3>
+            <p>Pick a distance metric, an index, and the number of neighbors you want back.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Read the result</h3>
+            <p>Compare distance, category, and latency. Run the benchmark to see recall against brute force.</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>Ask the library</h3>
+            <p>Add a passage, then ask a question. The answer is extractive and cites the retrieved sources.</p>
+          </article>
+        </div>
+        <div className="quick-guide-actions">
+          <Link to="/" className="btn primary">Run a search <ArrowRight size={14} /></Link>
+          <Link to="/library" className="btn secondary">Open the library</Link>
+          <Link to="/ask" className="btn secondary">Ask a question</Link>
+        </div>
+      </section>
 
       <div className="method-algorithms">
         <article className="method-card">

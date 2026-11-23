@@ -21,12 +21,12 @@ export function VectorField({ vectors = [], selectedId, resultIds = [], onSelect
       <svg className="vector-field" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="2D projection of the 16D demo vectors">
         <defs>
           <pattern id="dot-grid" width="24" height="24" patternUnits="userSpaceOnUse">
-            <circle cx="1" cy="1" r="1" fill="rgba(20,20,20,0.12)" />
+            <circle cx="1" cy="1" r="1" fill="rgba(244,240,230,0.16)" />
           </pattern>
         </defs>
         <rect width={width} height={height} fill="url(#dot-grid)" />
-        <line x1="55" y1="210" x2="545" y2="210" stroke="rgba(20,20,20,0.16)" strokeDasharray="3 5" />
-        <line x1="300" y1="35" x2="300" y2="385" stroke="rgba(20,20,20,0.16)" strokeDasharray="3 5" />
+        <line x1="55" y1="210" x2="545" y2="210" stroke="rgba(244,240,230,0.2)" strokeDasharray="3 5" />
+        <line x1="300" y1="35" x2="300" y2="385" stroke="rgba(244,240,230,0.2)" strokeDasharray="3 5" />
 
         {vectors.map((vector, index) => {
           const angle = (index * 137.5 * Math.PI) / 180;
