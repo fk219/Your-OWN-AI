@@ -13,7 +13,7 @@ let seedData;
 beforeAll(async () => {
   mongod = await MongoMemoryServer.create();
   db = await import('../src/db.js');
-  await db.connectDb(mongod.getUri('vectorai_test'));
+  await db.connectDb(mongod.getUri('vectorsearch_test'));
   ({ seedData } = await import('../src/seed.js'));
   ({ engine } = await import('../src/engine.js'));
   const { createApp } = await import('../src/app.js');

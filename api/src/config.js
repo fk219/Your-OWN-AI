@@ -7,7 +7,7 @@ const number = (value, fallback) => {
 
 export const config = {
   port: number(process.env.PORT, 4300),
-  mongoUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/vectorai',
+  mongoUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/vectorsearch',
   corsOrigin: process.env.CORS_ORIGIN || '',
   nodeEnv: process.env.NODE_ENV || 'development'
 };

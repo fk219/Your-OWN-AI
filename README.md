@@ -104,7 +104,7 @@ Eleven tests cover hash embeddings, KD-tree and HNSW recall, PCA projection, the
 
 - **Frontend:** Vercel static build, proxying `/api` to the Render API.
 - **API:** Render web service from `api/`; a production-style `Dockerfile` is included.
-- **Database:** MongoDB Atlas database `vectorai` on `Cluster0`.
+- **Database:** MongoDB Atlas database `vectorsearch` on `Cluster0`.
 - **CI:** GitHub Actions runs API tests and the frontend build on every push.
 
 ## Honest limitations
