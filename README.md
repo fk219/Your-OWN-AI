@@ -14,7 +14,7 @@ This is the MERN rebuild of the original C++ vector database. The C++ implementa
 | Surface | URL |
 |---|---|
 | React vector lab | https://vectorsearch.furqankhan.dev |
-| Express API | https://vector-ai-api.onrender.com/api/health |
+| Express API | https://vector-search-api-je4n.onrender.com/api/health |
 
 ## Screenshots
 

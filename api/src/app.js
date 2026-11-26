@@ -15,7 +15,7 @@ export function createApp() {
 
   app.disable('x-powered-by');
   app.set('trust proxy', 1);
-  app.use(requestContext('vector-ai-api'));
+  app.use(requestContext('vector-search-api'));
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(
     cors({
