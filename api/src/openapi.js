@@ -1,7 +1,7 @@
 export const openapi = {
   openapi: '3.1.0',
   info: {
-    title: 'Vector Field API',
+    title: 'VectorSearch API',
     version: '1.0.0',
     description:
       'HNSW, KD-tree, and brute-force search over a 16D demo field, plus a MongoDB-backed document library with hash embeddings and extractive RAG.'

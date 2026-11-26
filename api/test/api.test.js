@@ -2,6 +2,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import request from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
+process.env.MONGOMS_STARTUP_TIMEOUT = '120000';
+
 let mongod;
 let app;
 let db;

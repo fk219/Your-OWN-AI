@@ -22,7 +22,7 @@ function Shell({ children, data }) {
   return (
     <div className="site-shell">
       <header className="topbar">
-        <NavLink to="/" className="brand" aria-label="Vector Field home">
+        <NavLink to="/" className="brand" aria-label="VectorSearch home">
           <Mark />
           <div>
             <p className="brand-name">VECTOR / FIELD</p>

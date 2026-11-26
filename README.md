@@ -1,15 +1,26 @@
-# Vector Field — MERN Vector Search + RAG
+# VectorSearch — MERN Vector Search + RAG
 
 A live vector search lab. Compare **HNSW**, **KD-tree**, and **brute force** on the same 16-dimensional field, inspect the projected clusters, add documents to a MongoDB library, and ask questions against a real retrieval pipeline.
 
 This is the MERN rebuild of the original C++ vector database. The C++ implementation is preserved in [`engine/`](engine/) for reference.
 
+## Credits and my contribution
+
+- Original C++ vector database: `perryvegehan`, preserved in `engine/` for reference.
+- The MERN rebuild, HNSW and KD-tree implementations, PCA projection, retrieval pipeline, React lab, tests, Dockerfile, and deployment are the work presented in this repository.
+
 ## Live demo
 
 | Surface | URL |
 |---|---|
-| React vector lab | https://vector-field-gamma.vercel.app |
+| React vector lab | https://vectorsearch.furqankhan.dev |
 | Express API | https://vector-ai-api.onrender.com/api/health |
+
+## Screenshots
+
+| Vector lab | Extractive answer |
+|---|---|
+| ![VectorSearch lab](docs/home.png) | ![VectorSearch answer](docs/answer.png) |
 
 ## What works
 
@@ -104,3 +115,7 @@ Eleven tests cover hash embeddings, KD-tree and HNSW recall, PCA projection, the
 - The document index lives in one Node process and is rebuilt from MongoDB after changes. Production needs persistence, replication, and filtered search.
 - There is no authentication; this is a public lab.
 - No LLM is called. The answer is extractive and cites the passages it used.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

@@ -24,7 +24,7 @@ export function Method({ data }) {
             <em>Ask the library.</em>
           </h1>
           <p className="lede">
-            Vector Field is a live nearest-neighbor lab. It compares HNSW, KD-tree, and brute force on
+            VectorSearch is a live nearest-neighbor lab. It compares HNSW, KD-tree, and brute force on
             the same vectors, then lets you ask questions against a MongoDB-backed passage library.
             Every number you see comes from the running API.
           </p>
@@ -35,7 +35,7 @@ export function Method({ data }) {
       <section className="quick-guide">
         <div className="quick-guide-head">
           <p className="eyebrow">START HERE / FOUR MOVES</p>
-          <h2>How to use Vector Field.</h2>
+          <h2>How to use VectorSearch.</h2>
           <p>
             Start with the demo field. No key, no model download, no setup. The embedding is a local
             lexical hash, and the index is rebuilt from MongoDB on every add or delete.

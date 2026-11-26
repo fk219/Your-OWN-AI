@@ -1551,7 +1551,7 @@ h2 {
 }
 
 /* --------------------------------------------------------------------------
-   Vector Field — Night Observatory redesign
+   VectorSearch — Night Observatory redesign
    Deep navy, cream type, cobalt signal, lime/coral constellation points.
    -------------------------------------------------------------------------- */
 
@@ -2062,4 +2062,34 @@ h1 em {
   .quick-guide-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ---------------------------------------------------------------- */
+/* Theme switch: midnight vector lab                                */
+/* ---------------------------------------------------------------- */
+html[data-theme="dark"] {
+  --paper: #111214;
+  --paper-2: #17181b;
+  --card: #1d1e22;
+  --ink: #f2f0e9;
+  --muted: #b0ac9f;
+  --faint: #8a867a;
+  --line: rgba(242, 240, 233, 0.14);
+  --line-strong: rgba(242, 240, 233, 0.26);
+  --blue: #8ea2ff;
+  --violet: #c0a9ff;
+  --coral: #ff8b72;
+  --lime: #d6ef6a;
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 82% -12%, rgba(142, 162, 255, 0.1), transparent 34rem),
+    radial-gradient(circle at 4% 48%, rgba(255, 139, 114, 0.07), transparent 26rem),
+    var(--paper);
+}
+
+html[data-theme="dark"] ::selection {
+  background: rgba(142, 162, 255, 0.28);
 }

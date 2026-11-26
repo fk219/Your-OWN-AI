@@ -1,10 +1,10 @@
-# Vector Field — Guide
+# VectorSearch — Guide
 
 ## What it is
 
-Vector Field is a nearest-neighbor lab and a small retrieval-augmented answering demo. It compares HNSW, KD-tree, and brute-force search on the same vectors, then lets you ask questions against a MongoDB-backed passage library.
+VectorSearch is a nearest-neighbor lab and a small retrieval-augmented answering demo. It compares HNSW, KD-tree, and brute-force search on the same vectors, then lets you ask questions against a MongoDB-backed passage library.
 
-- **Live app:** https://vectorfield.furqankhan.dev
+- **Live app:** https://vectorsearch.furqankhan.dev
 - **API:** https://vector-ai-api.onrender.com
 
 ## Run a search
